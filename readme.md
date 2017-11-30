@@ -1,6 +1,6 @@
 # blear.classes.hotkey
 
-<https://blear.ydr.me/classes.hotkey>
+<https://blear.ydr.me/classes/hotkey>
 
 [![npm module][npm-img]][npm-url]
 [![build status][travis-img]][travis-url]
