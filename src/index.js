@@ -10,14 +10,21 @@ var selector = require('blear.core.selector');
 var event = require('blear.core.event');
 var Events = require('blear.classes.events');
 var object = require('blear.utils.object');
+var array = require('blear.utils.array');
+var access = require('blear.utils.access');
 
+var keyConnector = '+';
+var assistKeyMap = {
+    16: "shift",
+    17: "control",
+    18: "alt",
+    91: "meta",
+    93: "meta"
+};
 var keyNameMap = {
     8: "backspace",
     9: "tab",
     13: "enter",
-    16: "shift",
-    17: "control",
-    18: "alt",
     19: "pause",
     20: "capslock",
     27: "esc",
@@ -32,8 +39,6 @@ var keyNameMap = {
     40: "down",
     45: "insert",
     46: "del",
-    91: "meta",
-    93: "meta",
     48: "0",
     49: "1",
     50: "2",
@@ -145,21 +150,143 @@ var Hotkey = Events.extend({
 
         Hotkey.parent(the);
         options = the[_options] = object.assign({}, defaults, options);
-        var el = selector.query(options.el)[0];
-        event.on(el, options.keyEvent, function (ev) {
-            var which = ev.which || ev.charCode !== null ? ev.charCode : ev.keyCode;
+        the[_handleMap] = {};
+        the[_handleEl] = selector.query(options.el)[0];
+        the[_initEvent]();
+    },
 
+    /**
+     * 绑定热键
+     * @param shortcut {String} 使用“+”连接多键组合
+     * @param listener {Function} 回调
+     */
+    bind: function (shortcut, listener) {
+        var the = this;
+        shortcut = normalize(shortcut);
+        the[_handleMap][shortcut] = the[_handleMap][shortcut] || [];
+        the[_handleMap][shortcut].push(listener);
+        return the;
+    },
 
-        });
+    /**
+     * 解除绑定
+     * @param [shortcut] {String} 使用“+”连接多键组合
+     * @param [listener] {Function} 回调
+     */
+    unbind: function (shortcut, listener) {
+        var the = this;
+        var args = access.args(arguments);
+
+        switch (args.length) {
+            case 0:
+                the[_handleMap] = {};
+                break;
+
+            case 1:
+                shortcut = normalize(shortcut);
+                the[_handleMap][shortcut] = [];
+                break;
+
+            case 2:
+                shortcut = normalize(shortcut);
+                var foundIndex = -1;
+                if (the[_handleMap][shortcut]) {
+                    array.each(the[_handleMap][shortcut], function (index, _listener) {
+                        if (_listener === listener) {
+                            foundIndex = index;
+                            return false;
+                        }
+                    });
+                    array.remove(the[_handleMap][shortcut], foundIndex);
+                }
+                break;
+        }
     }
 });
 var prop = Hotkey.prototype;
 var sole = Hotkey.sole;
 var _options = sole();
+var _handleEl = sole();
 var _handleMap = sole();
+var _initEvent = sole();
+
+/**
+ * 初始化事件
+ */
+prop[_initEvent] = function () {
+    var the = this;
+
+    event.on(the[_handleEl], the[_options].keyEvent, function (ev) {
+        var keyPath = buildKeyPath(ev);
+        var listeners = the[_handleMap][keyPath];
+
+        if (!listeners) {
+            return;
+        }
+
+        var eachListeners = [].concat(listeners);
+        the.emit('hotkey', keyPath);
+        array.each(eachListeners, function (index, listener) {
+            listener.call(the, ev);
+        });
+    });
+};
 
 Hotkey.defaults = defaults;
 Hotkey.mac = /mac/i.test(navigator.platform);
+Hotkey.normalize = normalize;
 module.exports = Hotkey;
 
 // ========================================
+
+/**
+ * 标准化快捷键
+ * @param shortcut
+ * @returns {string}
+ */
+function normalize(shortcut) {
+    var keys = shortcut.toLowerCase().replace(/\s+/gi, '').split(keyConnector);
+
+    array.each(keys, function (index, key) {
+        keys[index] = aliases[key] || key;
+    });
+
+    var keyname = keys.pop();
+    keys.sort().push(keyname);
+    return keys.join(keyConnector);
+}
+
+
+/**
+ * 构建键程
+ * @param ev
+ * @returns {string}
+ */
+function buildKeyPath(ev) {
+    var which = ev.which;
+    var keyName = keyNameMap[which];
+    var keyPath = [];
+
+    if (ev.altKey) {
+        keyPath.push('alt');
+    }
+
+    if (ev.ctrlKey) {
+        keyPath.push('control');
+    }
+
+    if (ev.metaKey) {
+        keyPath.push('meta');
+    }
+
+    if (ev.shiftKey) {
+        keyPath.push('shift');
+    }
+
+    if (keyName) {
+        keyPath.push(keyName);
+    }
+
+    return keyPath.join(keyConnector);
+}
+

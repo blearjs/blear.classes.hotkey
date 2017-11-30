@@ -37,6 +37,8 @@
     "blear.classes.events": "^1.0.7",
     "blear.core.event": "^1.0.5",
     "blear.core.selector": "^1.0.10",
+    "blear.utils.access": "^1.0.5",
+    "blear.utils.array": "^1.0.12",
     "blear.utils.object": "^1.0.14"
   },
   "peerDependencies": {},

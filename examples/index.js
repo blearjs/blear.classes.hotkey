@@ -11,8 +11,13 @@ var Hotkey = require('../src/index');
 
 var ht = new Hotkey();
 
-ht.bind((Hotkey.mac ? 'cmd' : 'ctrl') + ' + b', function () {
-
+ht.on('hotkey', function (shortcut) {
+    console.log('hotkey', shortcut)
 });
+
+ht.bind((Hotkey.mac ? 'cmd' : 'ctrl') + ' + b', function () {});
+ht.bind((Hotkey.mac ? 'cmd' : 'ctrl') + ' + shift + b', function () {});
+ht.bind((Hotkey.mac ? 'cmd' : 'ctrl') + ' + shift + alt + b', function () {});
+ht.bind((Hotkey.mac ? 'cmd' : 'ctrl') + ' + shift + alt + ctrl + b', function () {});
 
 
