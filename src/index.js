@@ -14,6 +14,10 @@ var array = require('blear.utils.array');
 var access = require('blear.utils.access');
 
 var keyConnector = '+';
+var altKey = 'alt';
+var ctrlKey = 'control';
+var metaKey = 'meta';
+var shiftKey = 'shift';
 var assistKeyMap = {
     16: "shift",
     17: "control",
@@ -225,9 +229,9 @@ prop[_initEvent] = function () {
         }
 
         var eachListeners = [].concat(listeners);
-        the.emit('hotkey', keyPath);
+        the.emit('hotkey', ev, keyPath);
         array.each(eachListeners, function (index, listener) {
-            listener.call(the, ev);
+            listener.call(the, ev, keyPath);
         });
     });
 };
@@ -246,14 +250,22 @@ module.exports = Hotkey;
  */
 function normalize(shortcut) {
     var keys = shortcut.toLowerCase().replace(/\s+/gi, '').split(keyConnector);
+    var keyName = '';
+    var keyPath = [];
 
     array.each(keys, function (index, key) {
-        keys[index] = aliases[key] || key;
+        key = aliases[key] || key;
+
+        if (key === altKey || key === ctrlKey || key === metaKey || key === shiftKey) {
+            keyPath.push(key);
+        } else {
+            keyName = key;
+        }
     });
 
-    var keyname = keys.pop();
-    keys.sort().push(keyname);
-    return keys.join(keyConnector);
+    keyPath.sort();
+    keyPath.push(keyName);
+    return keyPath.join(keyConnector);
 }
 
 
@@ -268,19 +280,19 @@ function buildKeyPath(ev) {
     var keyPath = [];
 
     if (ev.altKey) {
-        keyPath.push('alt');
+        keyPath.push(altKey);
     }
 
     if (ev.ctrlKey) {
-        keyPath.push('control');
+        keyPath.push(ctrlKey);
     }
 
     if (ev.metaKey) {
-        keyPath.push('meta');
+        keyPath.push(metaKey);
     }
 
     if (ev.shiftKey) {
-        keyPath.push('shift');
+        keyPath.push(shiftKey);
     }
 
     if (keyName) {
