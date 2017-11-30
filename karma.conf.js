@@ -31,7 +31,7 @@ module.exports = function (config) {
             dir: './coverage/'
         });
     } else {
-        browsers = [];
+        browsers = ['Chrome'];
     }
 
 
@@ -69,7 +69,7 @@ module.exports = function (config) {
             },
             {
                 // 加载 src 下的原始文件，但不直接引入，使用模块加载器引入
-                pattern: './test/**',
+                pattern: './test/test.**',
                 included: false
             },
             {
@@ -89,7 +89,7 @@ module.exports = function (config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             // 原始模块，需要测试覆盖率
-            './src/**/*.js': ['coverage']
+            './src/index.js': ['coverage']
         },
 
 

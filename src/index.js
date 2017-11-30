@@ -1,5 +1,5 @@
 /**
- * blear.MODULE_NAME
+ * blear.core.hotkey
  * @author ydr.me
  * @create 2016年06月04日14:09:36
  */
