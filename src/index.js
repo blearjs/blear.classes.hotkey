@@ -159,6 +159,7 @@ var _options = sole();
 var _handleMap = sole();
 
 Hotkey.defaults = defaults;
+Hotkey.mac = /mac/i.test(navigator.platform);
 module.exports = Hotkey;
 
 // ========================================

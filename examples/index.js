@@ -7,6 +7,12 @@
 
 'use strict';
 
+var Hotkey = require('../src/index');
 
+var ht = new Hotkey();
+
+ht.bind((Hotkey.mac ? 'cmd' : 'ctrl') + ' + b', function () {
+
+});
 
 
