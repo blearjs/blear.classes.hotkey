@@ -33,7 +33,9 @@
   "bugs": {
     "url": "https://github.com/blearjs/blear.core.hotkey/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "blear.core.event": "^1.0.5"
+  },
   "peerDependencies": {},
   "devDependencies": {
     "coolie.js": "2.2.3",

@@ -6,5 +6,14 @@
 
 'use strict';
 
-module.exports = 'index';
+var event = require('blear.core.event');
+
+module.exports = function bindHotKey(el, key, listener) {
+    event.on(el, 'keydown', function (ev) {
+
+    });
+};
+
+// ========================================
+
 
