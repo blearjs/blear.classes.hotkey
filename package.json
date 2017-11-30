@@ -1,7 +1,7 @@
 {
-  "name": "blear.core.hotkey",
+  "name": "blear.classes.hotkey",
   "version": "1.0.0",
-  "description": "描述",
+  "description": "热键类",
   "scripts": {
     "live": "browser-sync start --config bs-config.js",
     "test": "node ./node_modules/.bin/karma start karma.conf.js --single-run",
@@ -25,13 +25,13 @@
     "url": "https://ydr.me"
   },
   "contributors": [],
-  "homepage": "https://github.com/blearjs/blear.core.hotkey",
+  "homepage": "https://github.com/blearjs/blear.classes.hotkey",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blearjs/blear.core.hotkey"
+    "url": "https://github.com/blearjs/blear.classes.hotkey"
   },
   "bugs": {
-    "url": "https://github.com/blearjs/blear.core.hotkey/issues"
+    "url": "https://github.com/blearjs/blear.classes.hotkey/issues"
   },
   "dependencies": {
     "blear.classes.events": "^1.0.7",
